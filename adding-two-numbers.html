@@ -3,22 +3,87 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <head>
 	<meta charset="UTF-8">
-	<title>Addin Two Numbers </title>
+	<title>Adding Two Numbers </title>
 </head>
 <body>
 <div id="app">
-
+	<input type="text" v-model.number="numberForm.number1" placeholder="Enter number">
+	<br>
+	<br>
+	<input type="text" v-model.number="numberForm.number2" placeholder="Enter number">
+	<br>
+	<br>
+	<button @click="sumNumber()">Sum</button>
+	<br>
+	<br>
+	<ul v-if="isShowing">
+		<li>{{numberForm.number1}} + {{numberForm.number2}} = {{numberForm.total}}</li>
+	</ul>
+	<br>
+	<hr>
+	<button @click="isShow = !isShow" :class="isShow ? 'green': 'red' ">{{buttonText}}</button>
+	<ul v-show="isShow">
+		<li v-for="(item, index) in list" >
+			{{`${index+1}. ${item.number1}   +   ${item.number2}  result : ${item.total}`}}
+		</li>
+	</ul>
 </div>
 </body>
 <script>
 	new Vue({
 		el : '#app',
 		data : {
-
+			numberForm:{
+				number1 : "",
+				number2 : "",
+				total : null ,
+			},
+			isShow : true,
+			list : []
 		},
-		methods: {},
-		computed : {}
+		methods: {
+			addList() {
+				this.list.push(this.numberForm);
+			},
+			sumNumber() {
+				this.numberForm.total = this.numberForm.number1 + this.numberForm.number2;
+				this.addList();
+				setTimeout(()=> {
+					this.reset()}
+				,1500);
+			},
+			reset () {
+				this.numberForm ={
+					number1 : "",
+					number2 : "",
+					total : null ,
+				}
+			},
+
+
+			},
+		computed : {
+			buttonText() {
+				return this.isShow ? "History Hide" : "History Show";
+			},
+			isShowing() {
+				return this.numberForm.total !== null ? true : false;
+			}
+
+
+		}
 	})
 </script>
-
+<style >
+	body {
+		margin-left: 20px;
+		margin-top: 20px;
+	}
+	.green {
+		background-color : green !important;
+	}
+	.red {
+		background-color : red;
+	}
+</style>
 </html>
