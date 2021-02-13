@@ -7,18 +7,22 @@
 </head>
 <body>
 <div id="app">
-	<input type="text" v-model.number="number1" placeholder="Enter number">
+	<input type="text" v-model.number="number1" placeholder="0">
 	<br>
 	<br>
-	<input type="text" v-model.number="number2" placeholder="Enter number">
+	<input type="text" v-model.number="number2" placeholder="0">
 	<br>
 	<br>
-	<button @click="sumNumber()" :disabled="isShowing" >Sum</button>
+	<button @click="sumNumber(number1,number2)" :disabled="isShowing" >Sum</button>
 	<br>
 	<br>
 	<ul v-if="isShowing">
 		<li>{{number1}} + {{number2}} = {{total}}</li>
 	</ul>
+	<ul v-if="process">
+		<h4>Please enter number!!!</h4>
+	</ul>
+
 	<br>
 	<hr>
 	<button @click="isShow = !isShow" :class="isShow ? 'green': 'red' ">{{buttonText}}</button>
@@ -35,17 +39,24 @@
 		data : {
 			number1 : "",
 			number2 : "",
-			total : null ,
+			total : null,
+			process: false,
 			isShow : true,
 			list : []
 		},
 		methods: {
-			addList() {
-				this.list.push(`${this.number1} + ${this.number2} result : ${this.total}`);
-			},
-			sumNumber() {
-				this.total = this.number1 + this.number2;
-				this.addList();
+			sumNumber(number1,number2) {
+				const val1= typeof(number1);
+				const val2= typeof(number2);
+				if(val1 == "number" & val2 == "number"){
+					this.total = this.number1 + this.number2;
+					this.process = false;
+
+				}
+				else{
+					this.process = true;
+				}
+
 			},
 			reset () {
 				this.number1 = "";
@@ -63,10 +74,13 @@
 
 		},
 		watch : {
-			total(){
+			total(val){
+				if(val != null ){
+				this.list.push(`${this.number1} + ${this.number2} result : ${this.total}`);
 				setTimeout(()=> {
 					this.reset();
 				},500)
+				}
 			}
 		}
 
