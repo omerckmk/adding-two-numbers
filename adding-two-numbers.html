@@ -7,24 +7,24 @@
 </head>
 <body>
 <div id="app">
-	<input type="text" v-model.number="numberForm.number1" placeholder="Enter number">
+	<input type="text" v-model.number="number1" placeholder="Enter number">
 	<br>
 	<br>
-	<input type="text" v-model.number="numberForm.number2" placeholder="Enter number">
+	<input type="text" v-model.number="number2" placeholder="Enter number">
 	<br>
 	<br>
-	<button @click="sumNumber()">Sum</button>
+	<button @click="sumNumber()" :disabled="isShowing" >Sum</button>
 	<br>
 	<br>
 	<ul v-if="isShowing">
-		<li>{{numberForm.number1}} + {{numberForm.number2}} = {{numberForm.total}}</li>
+		<li>{{number1}} + {{number2}} = {{total}}</li>
 	</ul>
 	<br>
 	<hr>
 	<button @click="isShow = !isShow" :class="isShow ? 'green': 'red' ">{{buttonText}}</button>
 	<ul v-show="isShow">
 		<li v-for="(item, index) in list" >
-			{{`${index+1}. ${item.number1}   +   ${item.number2}  result : ${item.total}`}}
+			{{index+1}}. {{item}}
 		</li>
 	</ul>
 </div>
@@ -33,45 +33,43 @@
 	new Vue({
 		el : '#app',
 		data : {
-			numberForm:{
-				number1 : "",
-				number2 : "",
-				total : null ,
-			},
+			number1 : "",
+			number2 : "",
+			total : null ,
 			isShow : true,
 			list : []
 		},
 		methods: {
 			addList() {
-				this.list.push(this.numberForm);
+				this.list.push(`${this.number1} + ${this.number2} result : ${this.total}`);
 			},
 			sumNumber() {
-				this.numberForm.total = this.numberForm.number1 + this.numberForm.number2;
+				this.total = this.number1 + this.number2;
 				this.addList();
-				setTimeout(()=> {
-					this.reset()}
-				,1500);
 			},
 			reset () {
-				this.numberForm ={
-					number1 : "",
-					number2 : "",
-					total : null ,
-				}
+				this.number1 = "";
+				this.number2 = "";
+				this.total = null;
 			},
-
-
-			},
+	},
 		computed : {
 			buttonText() {
 				return this.isShow ? "History Hide" : "History Show";
 			},
 			isShowing() {
-				return this.numberForm.total !== null ? true : false;
+				return this.total !== null;
 			}
 
-
+		},
+		watch : {
+			total(){
+				setTimeout(()=> {
+					this.reset();
+				},500)
+			}
 		}
+
 	})
 </script>
 <style >
